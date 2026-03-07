@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AppCategory: String, CaseIterable {
+enum AppCategory: String, CaseIterable, Codable {
     case all = "All"
     case entertainment = "Entertainment"
     case productivity = "Productivity"
