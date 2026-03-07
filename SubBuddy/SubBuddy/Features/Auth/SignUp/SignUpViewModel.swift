@@ -46,16 +46,14 @@ final class SignUpViewModel {
 extension SignUpViewModel {
 
     func isValidEmail(_ email: String) -> Bool {
-
         if email.contains("@") && email.contains(".") {
             return true
         }
-
+        
         return false
     }
 
     func isValidPassword(_ password: String) -> Bool {
-
         if password.count < 8 {
             return false
         }
@@ -65,11 +63,10 @@ extension SignUpViewModel {
         var hasSpecial = false
 
         for char in password {
-
             if char.isUppercase {
                 hasUppercase = true
             }
-
+            
             if char.isNumber {
                 hasNumber = true
             }

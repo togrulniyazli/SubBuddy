@@ -152,7 +152,6 @@ final class SignUpViewController: UIViewController {
         )
         
         eyeButton.tintColor = .systemGray
-        
         eyeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
         
         eyeButton.addTarget(
@@ -186,9 +185,7 @@ final class SignUpViewController: UIViewController {
         )
         
         eyeButton.tintColor = .systemGray
-        
         eyeButton.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        
         eyeButton.addTarget(
             self,
             action: #selector(toggleConfirmPasswordVisibility),
@@ -215,7 +212,6 @@ final class SignUpViewController: UIViewController {
     private lazy var bottomLabel: UILabel = {
         
         let label = UILabel()
-        
         let text = NSMutableAttributedString(
             string: "Already have account? ",
             attributes: [
@@ -284,7 +280,7 @@ final class SignUpViewController: UIViewController {
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-
+        
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
@@ -343,7 +339,6 @@ final class SignUpViewController: UIViewController {
     }
     
     private func setupActions() {
-        
         createAccountButton.addTarget(
             self,
             action: #selector(createAccountTapped),
@@ -353,29 +348,22 @@ final class SignUpViewController: UIViewController {
     
     
     @objc private func togglePasswordVisibility(_ sender: UIButton) {
-        
         passwordField.isSecureTextEntry.toggle()
-        
         let imageName = passwordField.isSecureTextEntry
         ? "eye.slash"
         : "eye"
-        
         sender.setImage(UIImage(systemName: imageName), for: .normal)
     }
     
     @objc private func toggleConfirmPasswordVisibility(_ sender: UIButton) {
-        
         confirmPasswordField.isSecureTextEntry.toggle()
-        
         let imageName = confirmPasswordField.isSecureTextEntry
         ? "eye.slash"
         : "eye"
-        
         sender.setImage(UIImage(systemName: imageName), for: .normal)
     }
     
     @objc private func signInTapped() {
-        
         navigationController?.pushViewController(
             SignInViewController(),
             animated: true
@@ -383,7 +371,6 @@ final class SignUpViewController: UIViewController {
     }
     
     @objc private func createAccountTapped() {
-        
         guard
             let email = emailField.text,
             let password = passwordField.text,
@@ -391,7 +378,6 @@ final class SignUpViewController: UIViewController {
         else {
             return
         }
-
         guard !email.isEmpty else {
             showAlert(
                 title: "Error",
@@ -399,7 +385,6 @@ final class SignUpViewController: UIViewController {
             )
             return
         }
-
         guard !password.isEmpty else {
             showAlert(
                 title: "Error",
@@ -407,7 +392,7 @@ final class SignUpViewController: UIViewController {
             )
             return
         }
-
+        
         guard password == confirm else {
             showAlert(
                 title: "Error",
@@ -415,75 +400,73 @@ final class SignUpViewController: UIViewController {
             )
             return
         }
-
+        
         viewModel.signUp(
             email: email,
             password: password,
             confirmPassword: confirm
         ) { [weak self] result in
-
+            
             guard let self else { return }
-
             switch result {
-
             case .success:
-
+                
                 guard let user = Auth.auth().currentUser else {
-
+                    
                     self.showAlert(
                         title: "Error",
                         message: "User not found"
                     )
-
+                    
                     return
                 }
-
+                
                 user.sendEmailVerification { error in
-
+                    
                     DispatchQueue.main.async {
-
+                        
                         if let error {
-
+                            
                             self.showAlert(
                                 title: "Verification Failed",
                                 message: error.localizedDescription
                             )
-
+                            
                             return
                         }
-
+                        
                         let alert = UIAlertController(
                             title: "Verify your email",
                             message: "A verification link has been sent to your email. Please verify your email before signing in.",
                             preferredStyle: .alert
                         )
-
+                        
                         alert.addAction(UIAlertAction(
                             title: "OK",
                             style: .default
                         ) { _ in
-
+                            
                             self.navigationController?.pushViewController(
                                 SignInViewController(),
                                 animated: true
                             )
                         })
-
+                        
                         self.present(alert, animated: true)
                     }
                 }
-
+                
             case .failure(let error):
-
+                
                 let nsError = error as NSError
-
+                
                 var message = error.localizedDescription
-
+                
                 if nsError.code == AuthErrorCode.emailAlreadyInUse.rawValue {
-
+                    
                     message = "This email is already in use. Please sign in instead."
                 }
-
+                
                 self.showAlert(
                     title: "Sign Up Failed",
                     message: message
@@ -496,20 +479,20 @@ final class SignUpViewController: UIViewController {
         title: String,
         message: String
     ) {
-
+        
         let alert = UIAlertController(
             title: title,
             message: message,
             preferredStyle: .alert
         )
-
+        
         alert.addAction(
             UIAlertAction(
                 title: "OK",
                 style: .default
             )
         )
-
+        
         present(alert, animated: true)
     }
     private func setupKeyboardObservers() {
@@ -527,17 +510,17 @@ final class SignUpViewController: UIViewController {
             object: nil
         )
     }
-
+    
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         scrollView.contentInset.bottom = frame.height
         scrollView.verticalScrollIndicatorInsets.bottom = frame.height
     }
-
+    
     @objc private func keyboardWillHide(_ notification: Notification) {
         scrollView.contentInset.bottom = 0
         scrollView.verticalScrollIndicatorInsets.bottom = 0
     }
-
+    
 }
 
