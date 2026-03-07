@@ -19,14 +19,6 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
-    private let headerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Profile"
-        label.font = .systemFont(ofSize: 22, weight: .bold)
-        label.textColor = .label
-        label.textAlignment = .center
-        return label
-    }()
     
     private let backButton: UIButton = {
         let btn = UIButton(type: .system)
@@ -113,14 +105,14 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
+        title = "Profile"
         setupUI()
         setupConstraints()
         setupBindings()
         setupActions()
         
-
-}
+        
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -132,7 +124,6 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
-        contentView.addSubview(headerLabel)
         contentView.addSubview(backButton)
         
         contentView.addSubview(avatarImageView)
@@ -156,6 +147,7 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
     }
     
     private func setupConstraints() {
+        
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -165,19 +157,8 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
             make.width.equalToSuperview()
         }
         
-        headerLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(4)
-            make.centerX.equalToSuperview()
-        }
-        
-        backButton.snp.makeConstraints { make in
-            make.centerY.equalTo(headerLabel)
-            make.left.equalToSuperview().inset(16)
-            make.width.height.equalTo(32)
-        }
-        
         avatarImageView.snp.makeConstraints { make in
-            make.top.equalTo(headerLabel.snp.bottom).offset(18)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.left.equalToSuperview().inset(24)
             make.width.height.equalTo(88)
         }
@@ -220,7 +201,6 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
                 }.resume()
             }
         }
-        
         
         viewModel.onError = { [weak self] message in
             self?.showAlert(title: "Error", message: message)
@@ -280,8 +260,7 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
         present(picker, animated: true)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         let image = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
         if let image {
@@ -352,6 +331,7 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
                 print("Firestore save error:", error.localizedDescription)
             } else {
                 print("Profile image URL saved successfully")
+                self.viewModel.load()
             }
         }
     }
