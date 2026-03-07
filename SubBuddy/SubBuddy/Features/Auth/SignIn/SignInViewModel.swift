@@ -9,13 +9,13 @@ import Foundation
 import FirebaseAuth
 
 final class SignInViewModel {
-
+    
     func signIn(
         email: String,
         password: String,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-
+        
         guard !email.isEmpty else {
             completion(.failure(NSError(
                 domain: "SignIn",
@@ -26,7 +26,7 @@ final class SignInViewModel {
             )))
             return
         }
-
+        
         guard !password.isEmpty else {
             completion(.failure(NSError(
                 domain: "SignIn",
@@ -37,18 +37,18 @@ final class SignInViewModel {
             )))
             return
         }
-
+        
         AuthService.shared.signIn(
             email: email,
             password: password
         ) { result in
-
+            
             switch result {
-
+                
             case .success:
-
+                
                 guard let user = Auth.auth().currentUser else {
-
+                    
                     completion(.failure(NSError(
                         domain: "SignIn",
                         code: 0,
@@ -56,43 +56,44 @@ final class SignInViewModel {
                             NSLocalizedDescriptionKey: "User not found"
                         ]
                     )))
-
+                    
                     return
                 }
-
-               
+                
+                
                 user.reload { error in
-
                     if let error {
-
                         completion(.failure(error))
                         return
                     }
-
+                    
                     if !user.isEmailVerified {
-
                         do {
                             try Auth.auth().signOut()
                         } catch {
+                            print("Failed to sign out:", error)
                         }
-
+                        
+                        
                         completion(.failure(NSError(
                             domain: "SignIn",
                             code: 0,
                             userInfo: [
                                 NSLocalizedDescriptionKey:
-                                "Please verify your email before signing in."
+                                    "Please verify your email before signing in."
                             ]
                         )))
-
+                        
                         return
                     }
-
+                    
+                    UserDefaults.standard.set(email, forKey: "lastUsedEmail")
+                    
                     completion(.success(()))
                 }
-
+                
             case .failure(let error):
-
+                
                 completion(.failure(error))
             }
         }
