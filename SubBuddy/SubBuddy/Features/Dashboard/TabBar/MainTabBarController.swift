@@ -30,48 +30,46 @@ final class MainTabBarController: UITabBarController {
         let homeVC = OverviewViewController()
         homeVC.view.backgroundColor = .systemBackground
         homeVC.title = "Home"
-        
-        let promoVC = UIViewController()
-        promoVC.view.backgroundColor = .systemBackground
-        promoVC.title = "Promo"
-        
-        let mySubVC = UIViewController()
-        mySubVC.view.backgroundColor = .systemBackground
-        mySubVC.title = "MySub"
-        
+        let promoVC = PromoViewController()
+        let mySubVC = MySubViewController()
         let profileVC = ProfileViewController()
         profileVC.view.backgroundColor = .systemBackground
         profileVC.title = "Profile"
         
-        homeVC.tabBarItem = UITabBarItem(
+        let homeNav = UINavigationController(rootViewController: homeVC)
+        let promoNav = UINavigationController(rootViewController: promoVC)
+        let mySubNav = UINavigationController(rootViewController: mySubVC)
+        let profileNav = UINavigationController(rootViewController: profileVC)
+        
+        homeNav.tabBarItem = UITabBarItem(
             title: "Home",
             image: UIImage(systemName: "house"),
             selectedImage: UIImage(systemName: "house.fill")
         )
         
-        promoVC.tabBarItem = UITabBarItem(
+        promoNav.tabBarItem = UITabBarItem(
             title: "Promo",
             image: UIImage(systemName: "tag"),
             selectedImage: UIImage(systemName: "tag.fill")
         )
         
-        mySubVC.tabBarItem = UITabBarItem(
+        mySubNav.tabBarItem = UITabBarItem(
             title: "MySub",
             image: UIImage(systemName: "doc.text"),
             selectedImage: UIImage(systemName: "doc.text.fill")
         )
         
-        profileVC.tabBarItem = UITabBarItem(
+        profileNav.tabBarItem = UITabBarItem(
             title: "Profile",
             image: UIImage(systemName: "person"),
             selectedImage: UIImage(systemName: "person.fill")
         )
         
         viewControllers = [
-            homeVC,
-            promoVC,
-            mySubVC,
-            profileVC
+            homeNav,
+            promoNav,
+            mySubNav,
+            profileNav
         ]
     }
 }
