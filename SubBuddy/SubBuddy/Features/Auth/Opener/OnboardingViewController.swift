@@ -11,7 +11,7 @@ import SnapKit
 final class OnboardingViewController: UIViewController {
     
     private let gradientLayer = CAGradientLayer()
-        
+    
     private let calendarImageView: UIImageView = {
         
         let config = UIImage.SymbolConfiguration(
@@ -90,7 +90,7 @@ final class OnboardingViewController: UIViewController {
         prepareInitialState()
         startAnimation()
     }
-        
+    
     private func setupGradient() {
         
         let color = UIColor(named: "appPrimaryColor") ?? .systemRed
@@ -160,22 +160,18 @@ final class OnboardingViewController: UIViewController {
     private func startAnimation() {
         
         UIView.animate(withDuration: 0.8) {
-            
             self.calendarImageView.transform = .identity
         }
         
         UIView.animate(withDuration: 0.8,delay: 0.1) {
-            
             self.bellImageView.transform = .identity
         }
         
         UIView.animate(withDuration: 0.5,delay: 0.2) {
-            
             self.titleLabel.alpha = 1
         }
         
         UIView.animate(withDuration: 0.9,delay: 0.3) {
-            
             self.signInButton.alpha = 1
             self.signUpButton.alpha = 1
             
@@ -201,7 +197,6 @@ final class OnboardingViewController: UIViewController {
     }
     
     @objc private func openSignIn() {
-        
         navigationController?.pushViewController(
             SignInViewController(),
             animated: true
@@ -209,7 +204,6 @@ final class OnboardingViewController: UIViewController {
     }
     
     @objc private func openSignUp() {
-        
         navigationController?.pushViewController(
             SignUpViewController(),
             animated: true

@@ -10,9 +10,7 @@ import SnapKit
 
 final class OpenerViewController: UIViewController {
     
-    
     private let gradientLayer = CAGradientLayer()
-    
     
     private let iconContainer = UIView()
     
@@ -63,7 +61,6 @@ final class OpenerViewController: UIViewController {
         return btn
     }()
     
-    
     private var calendarCenterConstraint: Constraint?
     private var bellCenterConstraint: Constraint?
     
@@ -90,10 +87,7 @@ final class OpenerViewController: UIViewController {
         animateEntrance()
     }
     
-}
-
-
-extension OpenerViewController {
+    
     
     private func setupGradient() {
         
@@ -110,10 +104,7 @@ extension OpenerViewController {
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
-}
-
-
-extension OpenerViewController {
+    
     
     private func setupUI() {
         
@@ -125,13 +116,9 @@ extension OpenerViewController {
         view.addSubview(titleLabel)
         view.addSubview(signInButton)
         view.addSubview(signUpButton)
-        
     }
     
-}
-
-
-extension OpenerViewController {
+    
     
     private func setupConstraints() {
         
@@ -139,48 +126,38 @@ extension OpenerViewController {
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(-120)
             make.size.equalTo(140)
-            
         }
         
         calendarImage.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.size.equalTo(90)
             calendarCenterConstraint = make.centerX.equalToSuperview().offset(-120).constraint
-            
         }
         
         bellImage.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.size.equalTo(40)
             bellCenterConstraint = make.centerX.equalToSuperview().offset(120).constraint
-            
         }
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(iconContainer.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
-            
         }
         
         signInButton.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(24)
             make.height.equalTo(56)
             signInBottomConstraint = make.bottom.equalToSuperview().offset(120).constraint
-            
         }
         
         signUpButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             signUpBottomConstraint = make.bottom.equalToSuperview().offset(70).constraint
-            
         }
-        
     }
     
-}
-
-
-extension OpenerViewController {
+    
     
     private func setupActions() {
         
@@ -195,13 +172,8 @@ extension OpenerViewController {
             action: #selector(openSignUp),
             for: .touchUpInside
         )
-        
     }
     
-}
-
-
-extension OpenerViewController {
     
     private func animateEntrance() {
         
@@ -228,30 +200,17 @@ extension OpenerViewController {
             self.signUpButton.alpha = 1
             
             self.view.layoutIfNeeded()
-            
         }
-        
     }
     
-}
-
-
-extension OpenerViewController {
     
-    @objc
-    private func openSignIn() {
-        
+    @objc private func openSignIn() {
         let vc = SignInViewController()
         navigationController?.pushViewController(vc, animated: true)
-        
     }
     
-    @objc
-    private func openSignUp() {
-        
+    @objc private func openSignUp() {
         let vc = SignUpViewController()
         navigationController?.pushViewController(vc, animated: true)
-        
     }
-    
 }
