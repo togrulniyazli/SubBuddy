@@ -93,8 +93,7 @@ final class AuthService {
     func signIn(
         email: String,
         password: String,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
+        completion: @escaping (Result<Void, Error>) -> Void) {
 
         auth.signIn(withEmail: email, password: password) { result, error in
 
