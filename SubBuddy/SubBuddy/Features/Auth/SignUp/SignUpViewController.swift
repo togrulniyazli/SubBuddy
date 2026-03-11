@@ -40,87 +40,6 @@ final class SignUpViewController: UIViewController {
     }()
     
     
-    private let facebookButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(named: "facebook")
-        config.title = " Facebook"
-        config.baseBackgroundColor = UIColor(named: "appPrimaryColor")?.withAlphaComponent(0.08)
-        
-        let btn = UIButton(configuration: config)
-        btn.layer.cornerRadius = 16
-        btn.clipsToBounds = true
-        return btn
-    }()
-    
-    private let googleButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(named: "google")
-        config.title = " Google"
-        config.baseBackgroundColor = UIColor(named: "appPrimaryColor")?.withAlphaComponent(0.08)
-        
-        let btn = UIButton(configuration: config)
-        btn.layer.cornerRadius = 16
-        btn.clipsToBounds = true
-        return btn
-    }()
-    
-    private lazy var socialStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [
-            facebookButton,
-            googleButton
-        ])
-        stack.axis = .horizontal
-        stack.spacing = 16
-        stack.distribution = .fillEqually
-        return stack
-    }()
-    
-    
-    private let leftLine: UIView = {
-        let v = UIView()
-        v.backgroundColor = .systemGray4
-        return v
-    }()
-    
-    private let rightLine: UIView = {
-        let v = UIView()
-        v.backgroundColor = .systemGray4
-        return v
-    }()
-    
-    private let orLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Or"
-        label.textColor = .secondaryLabel
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private lazy var orStack: UIStackView = {
-        
-        let stack = UIStackView(arrangedSubviews: [
-            leftLine,
-            orLabel,
-            rightLine
-        ])
-        
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .center
-        
-        leftLine.snp.makeConstraints { make in
-            make.height.equalTo(1)
-            make.width.equalTo(rightLine)
-        }
-        
-        rightLine.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-        
-        return stack
-    }()
-    
-    
     private let emailField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email / Phone Number"
@@ -264,73 +183,63 @@ final class SignUpViewController: UIViewController {
     private func setupUI() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+
         contentView.addSubview(titleLabel)
         contentView.addSubview(subtitleLabel)
-        contentView.addSubview(socialStack)
-        contentView.addSubview(orStack)
+
         contentView.addSubview(emailField)
         contentView.addSubview(passwordField)
         contentView.addSubview(confirmPasswordField)
+
         contentView.addSubview(createAccountButton)
         contentView.addSubview(bottomLabel)
     }
     
     private func setupConstraints() {
-        
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
-        
+
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(40)
             make.centerX.equalToSuperview()
         }
-        
+
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(30)
         }
-        
-        socialStack.snp.makeConstraints { make in
+
+        emailField.snp.makeConstraints { make in
             make.top.equalTo(subtitleLabel.snp.bottom).offset(30)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
         }
-        
-        orStack.snp.makeConstraints { make in
-            make.top.equalTo(socialStack.snp.bottom).offset(24)
-            make.left.right.equalToSuperview().inset(30)
-        }
-        
-        emailField.snp.makeConstraints { make in
-            make.top.equalTo(orStack.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(30)
-            make.height.equalTo(56)
-        }
-        
+
         passwordField.snp.makeConstraints { make in
             make.top.equalTo(emailField.snp.bottom).offset(15)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
         }
-        
+
         confirmPasswordField.snp.makeConstraints { make in
             make.top.equalTo(passwordField.snp.bottom).offset(15)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
         }
-        
+
         createAccountButton.snp.makeConstraints { make in
             make.top.equalTo(confirmPasswordField.snp.bottom).offset(25)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
         }
-        
+
         bottomLabel.snp.makeConstraints { make in
             make.top.equalTo(createAccountButton.snp.bottom).offset(16)
             make.centerX.equalToSuperview()

@@ -36,76 +36,6 @@ final class SignInViewController: UIViewController {
         return label
     }()
     
-    private let facebookButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(named: "facebook")
-        config.title = " Facebook"
-        config.baseBackgroundColor = UIColor(named: "appPrimaryColor")?.withAlphaComponent(0.08)
-        
-        let btn = UIButton(configuration: config)
-        btn.layer.cornerRadius = 16
-        btn.clipsToBounds = true
-        return btn
-    }()
-    
-    private let googleButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(named: "google")
-        config.title = " Google"
-        config.baseBackgroundColor = UIColor(named: "appPrimaryColor")?.withAlphaComponent(0.08)
-        
-        let btn = UIButton(configuration: config)
-        btn.layer.cornerRadius = 16
-        btn.clipsToBounds = true
-        return btn
-    }()
-    
-    private lazy var socialStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [facebookButton, googleButton])
-        stack.axis = .horizontal
-        stack.spacing = 16
-        stack.distribution = .fillEqually
-        return stack
-    }()
-    
-    private let leftLine: UIView = {
-        let v = UIView()
-        v.backgroundColor = .systemGray4
-        return v
-    }()
-    
-    private let rightLine: UIView = {
-        let v = UIView()
-        v.backgroundColor = .systemGray4
-        return v
-    }()
-    
-    private let orLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Or"
-        label.textColor = .secondaryLabel
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private lazy var orStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [leftLine, orLabel, rightLine])
-        stack.axis = .horizontal
-        stack.spacing = 12
-        stack.alignment = .center
-        
-        leftLine.snp.makeConstraints { make in
-            make.height.equalTo(1)
-            make.width.equalTo(rightLine)
-        }
-        
-        rightLine.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-        
-        return stack
-    }()
-    
     private let emailField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
@@ -162,6 +92,41 @@ final class SignInViewController: UIViewController {
         return btn
     }()
     
+    private lazy var bottomLabel: UILabel = {
+        
+        let label = UILabel()
+        
+        let text = NSMutableAttributedString(
+            string: "Don't have an account? ",
+            attributes: [
+                .foregroundColor: UIColor.secondaryLabel
+            ]
+        )
+        
+        text.append(
+            NSAttributedString(
+                string: "Sign Up",
+                attributes: [
+                    .foregroundColor: UIColor(named: "appPrimaryColor")!,
+                    .font: UIFont.systemFont(ofSize: 16, weight: .bold)
+                ]
+            )
+        )
+        
+        label.attributedText = text
+        label.textAlignment = .center
+        label.isUserInteractionEnabled = true
+        
+        let tap = UITapGestureRecognizer(
+            target: self,
+            action: #selector(signUpTapped)
+        )
+        
+        label.addGestureRecognizer(tap)
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -177,7 +142,6 @@ final class SignInViewController: UIViewController {
         
         setupKeyboardObservers()
         enableKeyboardDismissOnTap()
-        
     }
     
     deinit {
@@ -190,67 +154,60 @@ final class SignInViewController: UIViewController {
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(subtitleLabel)
-        contentView.addSubview(socialStack)
-        contentView.addSubview(orStack)
         contentView.addSubview(emailField)
         contentView.addSubview(passwordField)
         contentView.addSubview(forgotPasswordButton)
         contentView.addSubview(signInButton)
+        contentView.addSubview(bottomLabel)
     }
     
-    
     private func setupConstraints() {
+
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        
+
         contentView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
-        
+
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(40)
             make.centerX.equalToSuperview()
         }
-        
+
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(30)
         }
-        
-        socialStack.snp.makeConstraints { make in
+
+        emailField.snp.makeConstraints { make in
             make.top.equalTo(subtitleLabel.snp.bottom).offset(30)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
         }
-        
-        orStack.snp.makeConstraints { make in
-            make.top.equalTo(socialStack.snp.bottom).offset(24)
-            make.left.right.equalToSuperview().inset(30)
-        }
-        
-        emailField.snp.makeConstraints { make in
-            make.top.equalTo(orStack.snp.bottom).offset(20)
-            make.left.right.equalToSuperview().inset(30)
-            make.height.equalTo(56)
-        }
-        
+
         passwordField.snp.makeConstraints { make in
             make.top.equalTo(emailField.snp.bottom).offset(15)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
         }
-        
+
         forgotPasswordButton.snp.makeConstraints { make in
             make.top.equalTo(passwordField.snp.bottom).offset(8)
             make.right.equalToSuperview().inset(30)
         }
-        
+
         signInButton.snp.makeConstraints { make in
             make.top.equalTo(forgotPasswordButton.snp.bottom).offset(20)
             make.left.right.equalToSuperview().inset(30)
             make.height.equalTo(56)
+        }
+
+        bottomLabel.snp.makeConstraints { make in
+            make.top.equalTo(signInButton.snp.bottom).offset(16)
+            make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-30)
         }
     }
@@ -267,6 +224,13 @@ final class SignInViewController: UIViewController {
             self,
             action: #selector(didTapSignIn),
             for: .touchUpInside
+        )
+    }
+    
+    @objc private func signUpTapped() {
+        navigationController?.pushViewController(
+            SignUpViewController(),
+            animated: true
         )
     }
     
@@ -371,23 +335,44 @@ final class SignInViewController: UIViewController {
                 }
                 
             case .failure(let error):
-                
+
+                let nsError = error as NSError
+                var message = "Something went wrong. Please try again."
+
+                switch nsError.code {
+
+                case AuthErrorCode.wrongPassword.rawValue,
+                     AuthErrorCode.userNotFound.rawValue,
+                     AuthErrorCode.invalidCredential.rawValue,
+                     17004:
+
+                    message = "Invalid email or password."
+
+                case AuthErrorCode.invalidEmail.rawValue:
+                    message = "Please enter a valid email address."
+
+                case AuthErrorCode.networkError.rawValue:
+                    message = "Network error. Check your internet connection."
+
+                default:
+                    message = "Something went wrong. Please try again."
+                }
+
                 let alert = UIAlertController(
                     title: "Sign In Failed",
-                    message: error.localizedDescription,
+                    message: message,
                     preferredStyle: .alert
                 )
-                
+
                 alert.addAction(UIAlertAction(
                     title: "OK",
                     style: .default
                 ))
-                
+
                 self.present(alert, animated: true)
             }
         }
     }
-    
     
     private func showAlert(
         title: String,
@@ -437,5 +422,3 @@ final class SignInViewController: UIViewController {
         scrollView.verticalScrollIndicatorInsets.bottom = 0
     }
 }
-
-
