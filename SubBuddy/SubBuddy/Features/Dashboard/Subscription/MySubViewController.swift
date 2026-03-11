@@ -180,6 +180,24 @@ extension MySubViewController: UICollectionViewDelegate {
         
         let sub = viewModel.item(at: indexPath.row)
         
+        if sub.isEndingSoon {
+
+                let alert = UIAlertController(
+                    title: "Subscription Ending",
+                    message: "This subscription is already ending.",
+                    preferredStyle: .alert
+                )
+
+                alert.addAction(UIAlertAction(
+                    title: "OK",
+                    style: .default
+                ))
+
+                present(alert, animated: true)
+
+                return
+            }
+        
         let sheet = UIAlertController(
             title: sub.app.name,
             message: nil,
