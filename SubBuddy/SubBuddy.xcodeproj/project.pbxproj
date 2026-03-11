@@ -19,9 +19,22 @@
 		6FCADCA02F3894460081815F /* SubBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SubBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6FCADCB22F3894480081815F /* Exceptions for "SubBuddy" folder in "SubBuddy" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6FCADC9F2F3894460081815F /* SubBuddy */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6FCADCA22F3894460081815F /* SubBuddy */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6FCADCB22F3894480081815F /* Exceptions for "SubBuddy" folder in "SubBuddy" target */,
+			);
 			path = SubBuddy;
 			sourceTree = "<group>";
 		};
