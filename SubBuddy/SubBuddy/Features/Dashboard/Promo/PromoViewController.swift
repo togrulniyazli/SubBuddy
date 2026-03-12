@@ -4,10 +4,13 @@
 //
 //  Created by Toğrul Niyazlı on 06.03.26.
 //
+
 import UIKit
 import SnapKit
 
 final class PromoViewController: UIViewController {
+    
+    var selectedPromoIndex: Int?
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -98,9 +101,61 @@ final class PromoViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateCartBadge()
+            super.viewWillAppear(animated)
+            
+            updateCartBadge()
+            applyPromoFilter()
+        }
+    
+    private func applyPromoFilter() {
+
+        guard let index = selectedPromoIndex else {
+
+            welcomingOfferSection.isHidden = false
+            fullYearSection.isHidden = false
+
+            welcomingOfferSection.snp.remakeConstraints { make in
+                make.top.equalTo(searchBar.snp.bottom).offset(16)
+                make.left.right.equalToSuperview().inset(16)
+            }
+
+            fullYearSection.snp.remakeConstraints { make in
+                make.top.equalTo(welcomingOfferSection.snp.bottom).offset(16)
+                make.left.right.equalToSuperview().inset(16)
+                make.bottom.equalTo(contentView).offset(-20)
+            }
+
+            return
+        }
+
+        if index == 0 {
+
+            welcomingOfferSection.isHidden = false
+            fullYearSection.isHidden = true
+
+            welcomingOfferSection.snp.remakeConstraints { make in
+                make.top.equalTo(searchBar.snp.bottom).offset(16)
+                make.left.right.equalToSuperview().inset(16)
+                make.bottom.equalTo(contentView).offset(-20)
+            }
+
+        }
+
+        if index == 1 {
+
+            welcomingOfferSection.isHidden = true
+            fullYearSection.isHidden = false
+
+            fullYearSection.snp.remakeConstraints { make in
+                make.top.equalTo(searchBar.snp.bottom).offset(16)
+                make.left.right.equalToSuperview().inset(16)
+                make.bottom.equalTo(contentView).offset(-20)
+            }
+        }
+
+        selectedPromoIndex = nil
     }
+    
     
     private func setupUI() {
         

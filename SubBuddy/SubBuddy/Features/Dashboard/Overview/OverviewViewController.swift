@@ -136,6 +136,23 @@ final class OverviewViewController: UIViewController {
         
         hideKeyboardOnTap()
         
+        promoCollectionView.onPromoTap = { [weak self] index in
+            self?.openPromo(index: index)
+        }
+        
+    }
+    
+    private func openPromo(index: Int) {
+        
+        guard let tabBar = self.tabBarController else { return }
+        
+        tabBar.selectedIndex = 1
+        
+        if let nav = tabBar.viewControllers?[1] as? UINavigationController,
+           let promoVC = nav.viewControllers.first as? PromoViewController {
+            
+            promoVC.selectedPromoIndex = index
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

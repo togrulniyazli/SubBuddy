@@ -10,6 +10,8 @@ import SnapKit
 
 final class PromoCollectionView: UIView {
     
+    var onPromoTap: ((Int) -> Void)?
+    
     private var promos: [PromoModel] = [
         PromoModel(
             title: "Welcoming Offer!",
@@ -56,11 +58,13 @@ final class PromoCollectionView: UIView {
 
 extension PromoCollectionView: UICollectionViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView,numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         promos.count
     }
     
-    func collectionView(_ collectionView: UICollectionView,cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: PromoCell.identifier,
@@ -68,10 +72,14 @@ extension PromoCollectionView: UICollectionViewDataSource {
         ) as! PromoCell
         
         cell.configure(with: promos[indexPath.item])
+        
+        cell.onButtonTap = { [weak self] in
+            self?.onPromoTap?(indexPath.item)
+        }
+        
         return cell
     }
 }
-
 extension PromoCollectionView: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {

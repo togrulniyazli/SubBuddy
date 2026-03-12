@@ -10,6 +10,8 @@ import SnapKit
 
 final class PromoCell: UICollectionViewCell {
     
+    var onButtonTap: (() -> Void)?
+    
     static let identifier = "PromoCell"
     
     private let titleLabel: UILabel = {
@@ -48,10 +50,20 @@ final class PromoCell: UICollectionViewCell {
         contentView.addSubview(actionButton)
         contentView.addSubview(promoImageView)
         
+        actionButton.addTarget(
+                    self,
+                    action: #selector(buttonTapped),
+                    for: .touchUpInside
+                )
+        
         setupConstraints()
     }
     
     required init?(coder: NSCoder) { fatalError() }
+    
+    @objc private func buttonTapped() {
+            onButtonTap?()
+        }
     
     private func setupConstraints() {
         
