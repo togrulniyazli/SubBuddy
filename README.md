@@ -11,7 +11,7 @@ stop active subscriptions
 track subscription status
 monitor spending
 
-Main Features
+Main Features: 
 User authentication (Firebase Authentication)
 Email verification system
 User profile management
@@ -22,7 +22,7 @@ Search subscriptions
 Profile image upload (Firebase Storage)
 Cloud database (Firebase Firestore)
 
-Technologies
+Technologies: 
 The project is built using the following technologies:
 Swift
 UIKit
@@ -32,7 +32,7 @@ Firebase Authentication
 Firebase Firestore
 Firebase Storage
 
-Architecture
+Architecture: 
 The project follows the MVVM (Model-View-ViewModel) architecture pattern.
 
 Main project folders:
@@ -43,22 +43,22 @@ Managers
 Firebase
 Features
 
-Core
+Core: 
 Shared components, extensions and constants.
 
-Models
+Models: 
 Application data models such as AppModel, Subscription, UserModel.
 
-Managers
+Managers: 
 Managers responsible for handling business logic.
 
-Firebase
+Firebase: 
 Firebase service layer.
 
-Features
+Features: 
 Application screens and functional modules.
 
-Main Screens
+Main Screens: 
 Onboarding
 Sign In
 Sign Up
@@ -69,14 +69,14 @@ Checkout
 My Subscriptions
 Profile
 
-Requirements
+Requirements: 
 To run the project you need:
 Xcode
 iOS 15+
 Firebase configuration
 Apple Developer account
 
-Installation
+Installation: 
 Clone the repository
 git clone <repo-link>
 Open the project in Xcode
