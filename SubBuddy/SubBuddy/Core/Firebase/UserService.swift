@@ -23,46 +23,32 @@ final class UserService {
         birthDate: Date,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
-        
         guard let user = Auth.auth().currentUser else {
-            
             completion(.failure(NSError(
                 domain: "UserService",
                 code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey: "User not logged in"
-                ]
+                userInfo: [NSLocalizedDescriptionKey: "User not logged in"]
             )))
-            
             return
         }
         
-        
-        
         let data: [String: Any] = [
-            
             "uid": user.uid,
             "email": user.email ?? "",
             "firstName": firstName,
             "lastName": lastName,
             "birthDate": Timestamp(date: birthDate),
             "createdAt": Timestamp(date: Date())
-            
         ]
         
         db.collection("users")
             .document(user.uid)
-            .setData(data) { error in
-                
+            .setData(data, merge: true) { error in
                 DispatchQueue.main.async {
-                    
                     if let error {
-                        
                         completion(.failure(error))
-                        
                         return
                     }
-                    
                     completion(.success(()))
                 }
             }
@@ -71,26 +57,19 @@ final class UserService {
     func checkUserProfileExists(
         completion: @escaping (Result<Bool, Error>) -> Void
     ) {
-        
         guard let uid = Auth.auth().currentUser?.uid else {
-            
             completion(.failure(NSError(
                 domain: "UserService",
                 code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey: "User not logged in"
-                ]
+                userInfo: [NSLocalizedDescriptionKey: "User not logged in"]
             )))
-            
             return
         }
         
         db.collection("users")
             .document(uid)
             .getDocument { snapshot, error in
-                
                 DispatchQueue.main.async {
-                    
                     if let error {
                         completion(.failure(error))
                         return
@@ -101,35 +80,28 @@ final class UserService {
                         return
                     }
                     
-                    let hasFirstName = data["firstName"] as? String != nil
-                    
+                    let hasFirstName = !(data["firstName"] as? String ?? "").isEmpty
                     completion(.success(hasFirstName))
                 }
             }
     }
+    
     func fetchUserProfile(
         completion: @escaping (Result<[String: Any], Error>) -> Void
     ) {
-        
         guard let uid = Auth.auth().currentUser?.uid else {
-            
             completion(.failure(NSError(
                 domain: "UserService",
                 code: -1,
-                userInfo: [
-                    NSLocalizedDescriptionKey: "User not logged in"
-                ]
+                userInfo: [NSLocalizedDescriptionKey: "User not logged in"]
             )))
-            
             return
         }
         
         db.collection("users")
             .document(uid)
             .getDocument { snapshot, error in
-                
                 DispatchQueue.main.async {
-                    
                     if let error {
                         completion(.failure(error))
                         return
@@ -139,14 +111,41 @@ final class UserService {
                         completion(.failure(NSError(
                             domain: "UserService",
                             code: -2,
-                            userInfo: [
-                                NSLocalizedDescriptionKey: "User profile not found"
-                            ]
+                            userInfo: [NSLocalizedDescriptionKey: "User profile not found"]
                         )))
                         return
                     }
                     
                     completion(.success(data))
+                }
+            }
+    }
+    
+    func updateProfileImageURL(
+        _ url: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            completion(.failure(NSError(
+                domain: "UserService",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "User not logged in"]
+            )))
+            return
+        }
+        
+        db.collection("users")
+            .document(uid)
+            .setData([
+                "profileImageURL": url,
+                "updatedAt": Timestamp(date: Date())
+            ], merge: true) { error in
+                DispatchQueue.main.async {
+                    if let error {
+                        completion(.failure(error))
+                        return
+                    }
+                    completion(.success(()))
                 }
             }
     }

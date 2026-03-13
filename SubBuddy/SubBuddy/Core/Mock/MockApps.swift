@@ -12,7 +12,7 @@ struct MockApps {
     static let all: [AppModel] = [
 
         AppModel(
-            id: UUID(),
+            id: "youtube_premium",
             name: "YouTube Premium",
             iconURL: "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png",
             price: 4.76,
@@ -21,7 +21,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "Spotify",
             name: "Spotify",
             iconURL: "https://upload.wikimedia.org/wikipedia/commons/7/75/Spotify_icon.png",
             price: 3.79,
@@ -30,7 +30,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "Netflix",
             name: "Netflix",
             iconURL: "https://1000logos.net/wp-content/uploads/2017/05/Netflix-Logo.png",
             price: 9.99,
@@ -39,7 +39,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "Notion",
             name: "Notion",
             iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
             price: 8.00,
@@ -48,7 +48,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "ChatGPT_Plus",
             name: "ChatGPT Plus",
             iconURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/512px-ChatGPT_logo.svg.png",
             price: 20.00,
@@ -57,7 +57,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "Udemy",
             name: "Udemy",
             iconURL: "https://logos-world.net/wp-content/uploads/2021/11/Udemy-Logo.png",
             price: 9.99,
@@ -66,7 +66,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "Headspace",
             name: "Headspace",
             iconURL: "https://upload.wikimedia.org/wikipedia/commons/f/f7/Headspace_text_logo.png",
             price: 6.99,
@@ -75,7 +75,7 @@ struct MockApps {
         ),
 
         AppModel(
-            id: UUID(),
+            id: "PayPal",
             name: "PayPal",
             iconURL: "https://www.citypng.com/public/uploads/preview/transparent-hd-paypal-logo-701751694777788ilpzr3lary.png",
             price: 4.99,
@@ -84,7 +84,7 @@ struct MockApps {
         ),
         
         AppModel(
-            id: UUID(),
+            id: "Revolut",
             name: "Revolut",
             iconURL: "https://images.icon-icons.com/2699/PNG/512/revolut_logo_icon_168859.png",
             price: 8.75,

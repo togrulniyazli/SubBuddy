@@ -89,6 +89,9 @@ final class SignInViewModel {
                     
                     UserDefaults.standard.set(email, forKey: "lastUsedEmail")
                     
+                    CartManager.shared.refreshForCurrentUser()
+                    MySubManager.shared.refreshForCurrentUser()
+                    
                     completion(.success(()))
                 }
                 

@@ -7,9 +7,8 @@
 
 import Foundation
 
-struct AppModel: Codable {
-
-    let id: UUID
+struct AppModel: Codable, Hashable {
+    let id: String
     let name: String
     let iconURL: String
     let price: Double

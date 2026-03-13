@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
@@ -185,25 +186,26 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
     private func setupBindings() {
         viewModel.onUpdate = { [weak self] in
             guard let self else { return }
+            
             self.nameLabel.text = self.viewModel.fullName.isEmpty ? "—" : self.viewModel.fullName
             self.emailLabel.text = self.viewModel.email.isEmpty ? "—" : self.viewModel.email
+            
+            let placeholder = UIImage(systemName: "person.crop.circle.fill")
+            
             if let url = URL(string: self.viewModel.profileImageURL),
                !self.viewModel.profileImageURL.isEmpty {
-                
-                URLSession.shared.dataTask(with: url) { data, _, _ in
-                    if let data = data,
-                       let image = UIImage(data: data) {
-                        
-                        DispatchQueue.main.async {
-                            self.avatarImageView.image = image
-                        }
-                    }
-                }.resume()
+                self.avatarImageView.kf.setImage(with: url, placeholder: placeholder)
+            } else {
+                self.avatarImageView.image = placeholder
             }
         }
         
         viewModel.onError = { [weak self] message in
             self?.showAlert(title: "Error", message: message)
+        }
+        
+        viewModel.onLogout = { [weak self] in
+            SceneDelegate.shared?.switchToSignIn()
         }
     }
     
@@ -287,51 +289,45 @@ final class ProfileViewController: UIViewController, UIImagePickerControllerDele
         guard let imageData = image.jpegData(compressionQuality: 0.8) else { return }
         
         let storageRef = Storage.storage().reference()
-        let profileRef = storageRef.child("profile_images/\(userID).jpg")
         
-        profileRef.putData(imageData, metadata: nil) { [weak self] _, error in
+        let fileName = "\(userID)_\(UUID().uuidString).jpg"
+        let profileRef = storageRef.child("profile_images/\(fileName)")
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        
+        profileRef.putData(imageData, metadata: metadata) { [weak self] _, error in
+            
+            guard let self else { return }
             
             if let error = error {
-                print("UPLOAD ERROR:", error.localizedDescription)
+                self.showAlert(title: "Upload Error", message: error.localizedDescription)
                 return
             }
-            
-            print("UPLOAD SUCCESS")
             
             profileRef.downloadURL { url, error in
                 
                 if let error = error {
-                    print("DOWNLOAD URL ERROR:", error.localizedDescription)
+                    self.showAlert(title: "URL Error", message: error.localizedDescription)
                     return
                 }
                 
-                guard let url = url else {
-                    print("URL IS NIL")
+                guard let url else {
+                    self.showAlert(title: "URL Error", message: "Profile image URL is missing.")
                     return
                 }
                 
-                print("DOWNLOAD URL:", url.absoluteString)
-                
-                self?.saveProfileImageURL(url.absoluteString)
-            }
-        }
-    }
-    
-    private func saveProfileImageURL(_ url: String) {
-        
-        guard let userID = Auth.auth().currentUser?.uid else { return }
-        
-        let db = Firestore.firestore()
-        
-        db.collection("users").document(userID).setData([
-            "profileImageURL": url
-        ], merge: true) { error in
-            
-            if let error = error {
-                print("Firestore save error:", error.localizedDescription)
-            } else {
-                print("Profile image URL saved successfully")
-                self.viewModel.load()
+                UserService.shared.updateProfileImageURL(url.absoluteString) { result in
+                    
+                    switch result {
+                        
+                    case .success:
+                        self.viewModel.load()
+                        
+                    case .failure(let error):
+                        self.showAlert(title: "Save Error", message: error.localizedDescription)
+                    }
+                }
             }
         }
     }

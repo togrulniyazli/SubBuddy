@@ -16,25 +16,26 @@ final class ProfileViewModel {
     
     var onUpdate: (() -> Void)?
     var onError: ((String) -> Void)?
+    var onLogout: (() -> Void)?
     
     func load() {
         UserService.shared.fetchUserProfile { [weak self] result in
             guard let self else { return }
             
             switch result {
-                
             case .success(let data):
-                
                 let first = (data["firstName"] as? String) ?? ""
-                let last  = (data["lastName"] as? String) ?? ""
+                let last = (data["lastName"] as? String) ?? ""
                 
-                self.fullName = ([first, last]
+                self.fullName = [first, last]
                     .filter { !$0.isEmpty }
-                    .joined(separator: " "))
+                    .joined(separator: " ")
                 
-                self.email = (data["email"] as? String) ?? ""
+                self.email = (data["email"] as? String)
+                    ?? Auth.auth().currentUser?.email
+                    ?? ""
+                
                 self.profileImageURL = (data["profileImageURL"] as? String) ?? ""
-                
                 self.onUpdate?()
                 
             case .failure(let error):
@@ -46,7 +47,11 @@ final class ProfileViewModel {
     func logout() {
         do {
             try AuthService.shared.signOut()
-            SceneDelegate.shared?.switchToSignIn()
+            
+            CartManager.shared.refreshForCurrentUser()
+            MySubManager.shared.refreshForCurrentUser()
+            
+            onLogout?()
         } catch {
             onError?(error.localizedDescription)
         }

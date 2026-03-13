@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 final class CartManager {
     
@@ -15,18 +16,27 @@ final class CartManager {
         load()
     }
     
-    private let key = "savedCartItems"
-    
     private(set) var items: [CartItem] = []
     
     var onUpdate: (() -> Void)?
     
-    
-    func contains(app: AppModel) -> Bool {
-        return items.contains { $0.app.id == app.id }
+    private var key: String {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return "savedCartItems_guest"
+        }
+        return "savedCartItems_\(uid)"
     }
     
+    func refreshForCurrentUser() {
+        load()
+        onUpdate?()
+    }
     
+    func contains(app: AppModel) -> Bool {
+        items.contains { $0.app.id == app.id }
+    }
+    
+    @discardableResult
     func add(app: AppModel, plan: SubscriptionPlan, price: Double) -> Bool {
         if contains(app: app) {
             return false
@@ -39,12 +49,12 @@ final class CartManager {
         )
         
         items.append(item)
+        items = deduplicated(items)
         save()
         onUpdate?()
         
         return true
     }
-    
     
     func remove(at index: Int) {
         guard items.indices.contains(index) else { return }
@@ -53,16 +63,16 @@ final class CartManager {
         onUpdate?()
     }
     
-    
     func removeItems(_ removing: [CartItem]) {
+        let removingIDs = Set(removing.map { $0.app.id })
+        
         items.removeAll { item in
-            removing.contains { $0.app.id == item.app.id }
+            removingIDs.contains(item.app.id)
         }
         
         save()
         onUpdate?()
     }
-    
     
     func clear() {
         items.removeAll()
@@ -79,16 +89,34 @@ final class CartManager {
     }
     
     private func save() {
-        if let data = try? JSONEncoder().encode(items) {
+        let uniqueItems = deduplicated(items)
+        items = uniqueItems
+        
+        if let data = try? JSONEncoder().encode(uniqueItems) {
             UserDefaults.standard.set(data, forKey: key)
         }
     }
     
     private func load() {
-        guard let data = UserDefaults.standard.data(forKey: key) else { return }
+        guard let data = UserDefaults.standard.data(forKey: key) else {
+            items = []
+            return
+        }
         
         if let saved = try? JSONDecoder().decode([CartItem].self, from: data) {
-            items = saved
+            items = deduplicated(saved)
+            save()
+        } else {
+            items = []
+        }
+    }
+    
+    private func deduplicated(_ items: [CartItem]) -> [CartItem] {
+        var seen = Set<String>()
+        
+        return items.filter { item in
+            let inserted = seen.insert(item.app.id).inserted
+            return inserted
         }
     }
 }
